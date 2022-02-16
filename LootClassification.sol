@@ -18,17 +18,16 @@ All functions are made public incase they are useful but the expected use is thr
 Each of these take an item 'Type' (weapon, chest, head etc.) 
 and an index into the list of all possible items of that type as found in the OG Loot contract.
 
-The LootComponents contract can be used to get item indexes from Loot bag tokenIDs.
+The LootComponents(0x3eb43b1545a360d1D065CB7539339363dFD445F3) contract can be used to get item indexes from Loot bag tokenIDs.
+The code from LootComponents is copied into this contract and rewritten for gas efficiency
 So a typical use might be:
 
 // get weapon classification for loot bag# 1234
 {
-    LootComponents components = 
-        LootComponents(0x3eb43b1545a360d1D065CB7539339363dFD445F3);
     LootClassification classification = 
         LootClassification(_TBD_);
 
-    uint256[5] memory weaponComponents = components.weaponComponents(1234);
+    uint256[5] memory weaponComponents = classification.weaponComponents(1234);
     uint256 index = weaponComponents[0];
 
     LootClassification.Type itemType = LootClassification.Type.Weapon;
@@ -225,5 +224,139 @@ contract LootClassification
             return getRingRank(index);
             
         return getNeckRank(index);  
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /*
+    Gas efficient implementation of LootComponents
+    https://etherscan.io/address/0x3eb43b1545a360d1D065CB7539339363dFD445F3#code
+    The actual names are not needed when retreiving the component indexes only
+    Header comment from orignal follows:
+
+    // SPDX-License-Identifier: Unlicense
+    
+    This is a utility contract to make it easier for other
+    contracts to work with Loot properties.
+    
+    Call weaponComponents(), chestComponents(), etc. to get 
+    an array of attributes that correspond to the item. 
+    
+    The return format is:
+    
+    uint256[5] =>
+        [0] = Item ID
+        [1] = Suffix ID (0 for none)
+        [2] = Name Prefix ID (0 for none)
+        [3] = Name Suffix ID (0 for none)
+        [4] = Augmentation (0 = false, 1 = true)
+    
+    See the item and attribute tables below for corresponding IDs.
+    */
+
+    uint256 constant WEAPON_COUNT = 18;
+    uint256 constant CHEST_COUNT = 15;
+    uint256 constant HEAD_COUNT = 15;
+    uint256 constant WAIST_COUNT = 15;
+    uint256 constant FOOT_COUNT = 15;
+    uint256 constant HAND_COUNT = 15;
+    uint256 constant NECK_COUNT = 3;
+    uint256 constant RING_COUNT = 5;
+    uint256 constant SUFFIX_COUNT = 16;
+    uint256 constant NAME_PREFIX_COUNT = 69;
+    uint256 constant NAME_SUFFIX_COUNT = 18;
+
+    function random(string memory input) internal pure returns (uint256) 
+    {
+        return uint256(keccak256(abi.encodePacked(input)));
+    }
+
+    function weaponComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "WEAPON", WEAPON_COUNT);
+    }
+    
+    function chestComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "CHEST", CHEST_COUNT);
+    }
+    
+    function headComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "HEAD", HEAD_COUNT);
+    }
+    
+    function waistComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "WAIST", WAIST_COUNT);
+    }
+
+    function footComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "FOOT", FOOT_COUNT);
+    }
+    
+    function handComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "HAND", HAND_COUNT);
+    }
+    
+    function neckComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "NECK", NECK_COUNT);
+    }
+    
+    function ringComponents(uint256 tokenId) public pure returns (uint256[5] memory) 
+    {
+        return tokenComponents(tokenId, "RING", RING_COUNT);
+    }
+
+    function tokenComponents(uint256 tokenId, string memory keyPrefix, uint256 itemCount) 
+        internal pure returns (uint256[5] memory) 
+    {
+        uint256[5] memory components;
+        
+        uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
+        
+        components[0] = rand % itemCount;
+        components[1] = 0;
+        components[2] = 0;
+        
+        uint256 greatness = rand % 21;
+        if (greatness > 14) {
+            components[1] = (rand % SUFFIX_COUNT) + 1;
+        }
+        if (greatness >= 19) {
+            components[2] = (rand % NAME_PREFIX_COUNT) + 1;
+            components[3] = (rand % NAME_SUFFIX_COUNT) + 1;
+            if (greatness == 19) {
+                // ...
+            } else {
+                components[4] = 1;
+            }
+        }
+        return components;
+    }
+
+    function toString(uint256 value) internal pure returns (string memory) 
+    {
+        // Inspired by OraclizeAPI's implementation - MIT license
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
     }
 }
