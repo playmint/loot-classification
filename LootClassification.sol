@@ -14,6 +14,9 @@ All functions are made public incase they are useful but the expected use is thr
 - getRank()
 - getClass()
 - getMaterial()
+- getGreatness()
+- getPower()
+- getRating()
 
 Each of these take an item 'Type' (weapon, chest, head etc.) 
 and an index into the list of all possible items of that type as found in the OG Loot contract.
@@ -34,6 +37,9 @@ So a typical use might be:
     LootClassification.Class class = classification.getClass(itemType, index);
     LootClassification.Material material = classification.getMaterial(itemType, index);
     uint256 rank = classification.getRank(itemType, index);
+    uint256 power = classification.getPower(itemType, 1234);
+    uint256 greatness = classification.getGreatness(itemType, 1234);
+    uint256 rating = classification.getRating(itemType, 1234);
 }
 */
 contract LootClassification
@@ -226,6 +232,76 @@ contract LootClassification
         return getNeckRank(index);  
     }
 
+    function getPower(Type lootType, uint256 tokenId) pure public returns (uint256)
+    {
+        uint256 index;
+        if (lootType == Type.Weapon)
+            index = weaponComponents(tokenId)[0];
+            
+        if (lootType == Type.Chest)
+            index = chestComponents(tokenId)[0];
+        
+        if (lootType == Type.Head)
+            index = headComponents(tokenId)[0];
+
+        if (lootType == Type.Waist)
+            index = waistComponents(tokenId)[0];
+
+        if (lootType == Type.Foot)
+            index = footComponents(tokenId)[0];
+
+        if (lootType == Type.Hand)
+            index = handComponents(tokenId)[0];
+
+        if (lootType == Type.Neck)
+            index = neckComponents(tokenId)[0];
+
+        if (lootType == Type.Ring)
+            index = ringComponents(tokenId)[0];
+
+        if (lootType == Type.Chest ||
+            lootType == Type.Weapon ||
+            lootType == Type.Head ||
+            lootType == Type.Waist ||
+            lootType == Type.Foot ||
+            lootType == Type.Hand)
+        {
+            return 6 - getRank(lootType, index);
+        } else {
+            return 4 - getRank(lootType, index); 
+        }
+    }
+
+    function getGreatness(Type lootType, uint256 tokenId) pure public returns (uint256) 
+    {
+        if (lootType == Type.Weapon)
+            return tokenGreatness(tokenId, "WEAPON");
+            
+        if (lootType == Type.Chest)
+            return tokenGreatness(tokenId, "CHEST");
+        
+        if (lootType == Type.Head)
+            return tokenGreatness(tokenId, "HEAD");
+
+        if (lootType == Type.Waist)
+            return tokenGreatness(tokenId, "WAIST");
+
+        if (lootType == Type.Foot)
+            return tokenGreatness(tokenId, "FOOT");
+
+        if (lootType == Type.Hand)
+            return tokenGreatness(tokenId, "HAND");
+
+        if (lootType == Type.Ring)
+            return tokenGreatness(tokenId, "RING");
+        
+        return tokenGreatness(tokenId, "NECK");
+    }
+
+    function getRating(Type lootType, uint256 tokenId) pure public returns (uint256)
+    {   
+        return getPower(lootType, tokenId) * getGreatness(lootType, tokenId);
+    }
     ///////////////////////////////////////////////////////////////////////////
     /*
     Gas efficient implementation of LootComponents
@@ -335,6 +411,13 @@ contract LootClassification
             }
         }
         return components;
+    }
+
+    function tokenGreatness(uint256 tokenId, string memory keyPrefix) 
+        internal pure returns (uint256) 
+    {
+        uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
+        return rand % 21;
     }
 
     function toString(uint256 value) internal pure returns (string memory) 

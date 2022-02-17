@@ -1,4 +1,4 @@
-# LootCLassification.sol
+# LootClassification.sol
 
 This is a Lootverse utility contract to classify items found in Loot (For Adventurers) Bags.
 
@@ -53,13 +53,18 @@ LootClassification classification =
 // get component array for loot bag# 1234
 uint256[5] memory weaponComponents = classification.weaponComponents(1234);
 
-// get weapon index as first element of component array (we're ignoring suffixes and predixes here)
+// get weapon index as first element of component array (we're ignoring suffixes and prefixes here)
 uint256 index = weaponComponents[0];
 
-// class, materila and rank can now all be derived from the index for Type Weapon
+// class, material and rank can now all be derived from the index for Type Weapon
 LootClassification.Class class = classification.getClass(LootClassification.Type.Weapon, index);
 LootClassification.Material material = classification.getMaterial( LootClassification.Type.Weapon, index);
 uint256 rank = classification.getRank( LootClassification.Type.Weapon, index);
+
+// greatness, power, and rating can be all derived from just tokenId
+uint256 power = classification.getPower(itemType, 1234);
+uint256 greatness = classification.getGreatness(itemType, 1234);
+uint256 rating = classification.getRating(itemType, 1234);
 ```
 
 ## Deploy History
