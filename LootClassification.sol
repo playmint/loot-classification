@@ -15,7 +15,7 @@ All functions are made public incase they are useful but the expected use is thr
 - getClass()
 - getMaterial()
 - getGreatness()
-- getPower()
+- getLevel()
 - getRating()
 
 Each of these take an item 'Type' (weapon, chest, head etc.) 
@@ -37,7 +37,7 @@ So a typical use might be:
     LootClassification.Class class = classification.getClass(itemType, index);
     LootClassification.Material material = classification.getMaterial(itemType, index);
     uint256 rank = classification.getRank(itemType, index);
-    uint256 power = classification.getPower(itemType, 1234);
+    uint256 power = classification.getLevel(itemType, 1234);
     uint256 greatness = classification.getGreatness(itemType, 1234);
     uint256 rating = classification.getRating(itemType, 1234);
 }
@@ -232,7 +232,7 @@ contract LootClassification
         return getNeckRank(index);  
     }
 
-    function getPower(Type lootType, uint256 tokenId) pure public returns (uint256)
+    function getLevel(Type lootType, uint256 tokenId) pure public returns (uint256)
     {
         uint256 index;
         if (lootType == Type.Weapon)
@@ -300,7 +300,7 @@ contract LootClassification
 
     function getRating(Type lootType, uint256 tokenId) pure public returns (uint256)
     {   
-        return getPower(lootType, tokenId) * getGreatness(lootType, tokenId);
+        return getLevel(lootType, tokenId) * getGreatness(lootType, tokenId);
     }
     ///////////////////////////////////////////////////////////////////////////
     /*

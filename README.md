@@ -13,7 +13,7 @@ This contract is deployed to ethereum mainnent with addresses tracked in the tab
 
 The intention is that other Lootverse contracts can directly reefrence the deployed version of this and interact with it's public interface.
 
-## Modifcation
+## Modification
 
 If new functionality is required,
 
@@ -37,6 +37,11 @@ All functions are made public incase they are useful but the expected use is thr
 - getRank()
 - getClass()
 - getMaterial()
+
+and 3 stats functions:
+- getLevel()
+- getGreatness()
+- getRating()
 
 Each of these take an item 'Type' (weapon, chest, head etc.) 
 and an index into the list of all possible items of that type as found in the OG Loot contract.
@@ -62,7 +67,7 @@ LootClassification.Material material = classification.getMaterial( LootClassific
 uint256 rank = classification.getRank( LootClassification.Type.Weapon, index);
 
 // greatness, power, and rating can be all derived from just tokenId
-uint256 power = classification.getPower(itemType, 1234);
+uint256 level = classification.getLevel(itemType, 1234);
 uint256 greatness = classification.getGreatness(itemType, 1234);
 uint256 rating = classification.getRating(itemType, 1234);
 ```
