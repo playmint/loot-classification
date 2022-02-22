@@ -37,7 +37,7 @@ So a typical use might be:
     LootClassification.Class class = classification.getClass(itemType, index);
     LootClassification.Material material = classification.getMaterial(itemType, index);
     uint256 rank = classification.getRank(itemType, index);
-    uint256 power = classification.getLevel(itemType, 1234);
+    uint256 level = classification.getLevel(itemType, 1234);
     uint256 greatness = classification.getGreatness(itemType, 1234);
     uint256 rating = classification.getRating(itemType, 1234);
 }
@@ -162,12 +162,15 @@ contract LootClassification
     
     function getRingRank(uint256 index) pure public returns (uint256)
     {
-        return index + 1;
+        if (index > 2)
+            return 1;
+        else 
+            return index + 1;
     }
     
     function getNeckRank(uint256 index) pure public returns (uint256)
     {
-        return 3 - index;
+        return index * 0 + 1;
     }
     
     function getMaterial(Type lootType, uint256 index) pure public returns (Material)

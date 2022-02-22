@@ -66,7 +66,7 @@ LootClassification.Class class = classification.getClass(LootClassification.Type
 LootClassification.Material material = classification.getMaterial( LootClassification.Type.Weapon, index);
 uint256 rank = classification.getRank( LootClassification.Type.Weapon, index);
 
-// greatness, power, and rating can be all derived from just tokenId
+// greatness, level, and rating can be all derived from just tokenId
 uint256 level = classification.getLevel(itemType, 1234);
 uint256 greatness = classification.getGreatness(itemType, 1234);
 uint256 rating = classification.getRating(itemType, 1234);
