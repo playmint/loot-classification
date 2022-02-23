@@ -170,7 +170,7 @@ contract LootClassification
     
     function getNeckRank(uint256 index) pure public returns (uint256)
     {
-        return index * 0 + 1;
+        return 1;
     }
     
     function getMaterial(Type lootType, uint256 index) pure public returns (Material)
