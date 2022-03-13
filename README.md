@@ -74,8 +74,8 @@ uint256 rating = classification.getRating(itemType, 1234);
 
 ## Deploy History
 
-| Project | Commit | Deployed address link |
-|---------|---------------------|-----------------------|
-| The Crypt: Chapter one | [a254244aaebdbe8ca5e4b2e28fc9138cfa529f51](https://github.com/playmint/loot-classification/tree/a254244aaebdbe8ca5e4b2e28fc9138cfa529f51)| [0xC6Df003DC044582A45e712BA219719410013ad63](https://etherscan.io/address/0xC6Df003DC044582A45e712BA219719410013ad63) |
-| The Genesis Project v2  | [f8d64e4ea071585cbb505ed795491573ad5f9135](https://github.com/playmint/loot-classification/tree/f8d64e4ea071585cbb505ed795491573ad5f9135)| [0x04190EF3D7C91C881D335725B6BB5d45236B22AE](https://etherscan.io/address/0x04190EF3D7C91C881D335725B6BB5d45236B22AE) |
+| Version | Project        | Commit | Deployed address link |
+|---------|----------------|---------------------|-----------------------|
+| v1 | The Crypt: Chapter one | [a2542...51](https://github.com/playmint/loot-classification/tree/a254244aaebdbe8ca5e4b2e28fc9138cfa529f51)| [0xC6Df0...63](https://etherscan.io/address/0xC6Df003DC044582A45e712BA219719410013ad63) |
+| v2 | The Genesis Project v2  | [f8d64...35](https://github.com/playmint/loot-classification/tree/f8d64e4ea071585cbb505ed795491573ad5f9135)| [0x04190...2AE](https://etherscan.io/address/0x04190EF3D7C91C881D335725B6BB5d45236B22AE) |
 
